@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: concert-reservation-postgres
+    environment:
+      POSTGRES_DB: concert_reservation
+      POSTGRES_USER: concert_app
+      POSTGRES_PASSWORD: concert_app
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+volumes:
+  postgres_data:
