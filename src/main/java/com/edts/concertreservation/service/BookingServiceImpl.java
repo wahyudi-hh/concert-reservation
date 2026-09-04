@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -25,12 +24,6 @@ public class BookingServiceImpl implements BookingService{
 
     private final ConcertRepository concertRepository;
     private final BookingRepository bookingRepository;
-
-    @Override
-    public List<Concert> findAvailableConcerts() {
-        Instant now = Instant.now();
-        return concertRepository.findAllByBookingStartAtLessThanEqualAndBookingEndAtGreaterThan(now, now);
-    }
 
     @Override
     @Transactional

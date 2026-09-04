@@ -18,8 +18,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -63,23 +61,6 @@ class BookingServiceImplTest {
             .bookingStartAt(now.minusSeconds(60))
             .bookingEndAt(now.plusSeconds(60))
             .build();
-    }
-
-    @Test
-    void findAvailableConcerts_shouldReturnAvailableConcerts() {
-        Concert concert = generateValidConcert(UUID.randomUUID());
-
-        when(concertRepository
-            .findAllByBookingStartAtLessThanEqualAndBookingEndAtGreaterThan(any(Instant.class), any(Instant.class)))
-            .thenReturn(Collections.singletonList(concert));
-
-        List<Concert> concerts = bookingService.findAvailableConcerts();
-
-        assertEquals(1, concerts.size());
-        assertEquals(concert, concerts.get(0));
-
-        verify(concertRepository)
-            .findAllByBookingStartAtLessThanEqualAndBookingEndAtGreaterThan(any(Instant.class), any(Instant.class));
     }
 
     @Test
