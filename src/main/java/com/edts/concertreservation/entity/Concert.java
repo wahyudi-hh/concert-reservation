@@ -1,4 +1,4 @@
-package com.edts.entity;
+package com.edts.concertreservation.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
