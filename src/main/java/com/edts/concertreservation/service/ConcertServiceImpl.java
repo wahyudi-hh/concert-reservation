@@ -15,6 +15,20 @@ public class ConcertServiceImpl implements ConcertService{
     private final ConcertRepository concertRepository;
 
     @Override
+    public Concert createConcert(String name, String description, Instant bookingStartAt, Instant bookingEndAt, Integer totalTickets, Integer maxTicketsPerBooking) {
+        Concert concert = Concert.builder()
+            .name(name)
+            .description(description)
+            .bookingStartAt(bookingStartAt)
+            .bookingEndAt(bookingEndAt)
+            .totalTickets(totalTickets)
+            .availableTickets(totalTickets)
+            .maxTicketsPerBooking(maxTicketsPerBooking)
+            .build();
+        return concertRepository.save(concert);
+    }
+
+    @Override
     public List<Concert> findAvailableConcerts() {
         Instant now = Instant.now();
         return concertRepository.findAllByBookingStartAtLessThanEqualAndBookingEndAtGreaterThan(now, now);

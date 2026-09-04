@@ -29,7 +29,7 @@ public class BookingServiceImpl implements BookingService{
     @Transactional
     public Booking book(UUID concertId, int quantity) {
         Concert concert = concertRepository.findById(concertId)
-            .orElseThrow(() -> new ConcertNotFoundException(concertId));
+            .orElseThrow(() -> new ConcertNotFoundException(concertId.toString()));
 
         Instant now = Instant.now();
         validateBooking(concert, quantity, now);

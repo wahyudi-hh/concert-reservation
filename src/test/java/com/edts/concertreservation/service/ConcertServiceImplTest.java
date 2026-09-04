@@ -6,6 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -48,6 +49,34 @@ class ConcertServiceImplTest {
             .bookingStartAt(now.minusSeconds(60))
             .bookingEndAt(now.plusSeconds(60))
             .build();
+    }
+
+    @Test
+    void createConcert_shouldReturnSavedConcert() {
+        Concert concert = generateValidConcert(UUID.randomUUID());
+
+        when(concertRepository.save(any(Concert.class))).thenReturn(concert);
+
+        Concert returnedConcert = concertService.createConcert(
+            concert.getName(),
+            concert.getDescription(),
+            concert.getBookingStartAt(),
+            concert.getBookingEndAt(),
+            concert.getTotalTickets(),
+            concert.getMaxTicketsPerBooking());
+        assertEquals(concert, returnedConcert);
+
+        ArgumentCaptor<Concert> captor = ArgumentCaptor.forClass(Concert.class);
+        verify(concertRepository).save(captor.capture());
+
+        Concert concertArg = captor.getValue();
+        assertEquals(concert.getName(), concertArg.getName());
+        assertEquals(concert.getDescription(), concertArg.getDescription());
+        assertEquals(concert.getBookingStartAt(), concertArg.getBookingStartAt());
+        assertEquals(concert.getBookingEndAt(), concertArg.getBookingEndAt());
+        assertEquals(concert.getTotalTickets(), concertArg.getTotalTickets());
+        assertEquals(concert.getTotalTickets(), concertArg.getAvailableTickets());
+        assertEquals(concert.getMaxTicketsPerBooking(), concertArg.getMaxTicketsPerBooking());
     }
 
     @Test

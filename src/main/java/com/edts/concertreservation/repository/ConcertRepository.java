@@ -16,9 +16,9 @@ public interface ConcertRepository extends JpaRepository<Concert, UUID> {
 
     @Modifying
     @Query("""
-        UPDATE concert
-        SET available_tickets = available_tickets - :quantity
-        WHERE id = :concertId AND available_tickets >= :quantity
+        UPDATE Concert
+        SET availableTickets = availableTickets - :quantity
+        WHERE id = :concertId AND availableTickets >= :quantity
         """)
     int reserveTickets(@Param("concertId") UUID concertId, @Param("quantity") int quantity);
 }
