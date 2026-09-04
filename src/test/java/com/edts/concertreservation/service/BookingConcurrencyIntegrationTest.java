@@ -67,28 +67,39 @@ public class BookingConcurrencyIntegrationTest {
         return concert;
     }
 
-    @Test
-    void concurrentBookings_shouldNotOversellTickets() throws Exception {
-        Concert concert = createConcert(10);
-        int numberOfRequest = 100;
-        ExecutorService executor = Executors.newFixedThreadPool(20);
-
-        try {
-            List<Callable<ResponseEntity<String>>> tasks = new ArrayList<>();
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            String body = """
+    HttpEntity<String> generateHttpRequest() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String body = """
                 {
                     "concertId": "%s",
                     "quantity": 1
                 }
-                """.formatted(concert.getId());
-            HttpEntity<String> request = new HttpEntity<>(body, headers);
+                """.formatted(concertId);
+        return new HttpEntity<>(body, headers);
+    }
 
-            for (int i=0; i<numberOfRequest; i++) {
-                tasks.add(() -> restTemplate.postForEntity("/api/bookings", request, String.class));
-            }
+    List<Callable<ResponseEntity<String>>> generateConcurrentRequests(int numberOfRequest) {
+        List<Callable<ResponseEntity<String>>> tasks = new ArrayList<>();
+
+        HttpEntity<String> request = generateHttpRequest();
+
+        for (int i=0; i<numberOfRequest; i++) {
+            tasks.add(() -> restTemplate.postForEntity("/api/bookings", request, String.class));
+        }
+
+        return tasks;
+    }
+
+    @Test
+    void concurrentBookings_shouldNotOversellTickets() throws Exception {
+        int totalTickets = 10;
+        int numberOfRequest = 100;
+        Concert concert = createConcert(totalTickets);
+        ExecutorService executor = Executors.newFixedThreadPool(20);
+
+        try {
+            List<Callable<ResponseEntity<String>>> tasks = generateConcurrentRequests(numberOfRequest);
 
             List<Future<ResponseEntity<String>>> futures = executor.invokeAll(tasks);
             long successfulBookings = 0;
@@ -103,8 +114,8 @@ public class BookingConcurrencyIntegrationTest {
                     failedBookings++;
                 }
             }
-            assertEquals(10, successfulBookings);
-            assertEquals(90, failedBookings);
+            assertEquals(totalTickets, successfulBookings);
+            assertEquals(numberOfRequest - totalTickets, failedBookings);
 
             Concert updatedConcert = concertRepository.findById(concert.getId()).orElseThrow();
             assertEquals(0, updatedConcert.getAvailableTickets());
