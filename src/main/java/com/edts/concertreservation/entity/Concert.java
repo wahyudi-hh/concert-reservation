@@ -1,9 +1,7 @@
 package com.edts.concertreservation.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -12,7 +10,9 @@ import java.util.UUID;
 @Table(name = "concert")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Concert {
 
     @Id
