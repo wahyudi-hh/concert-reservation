@@ -1,10 +1,10 @@
 package com.edts.concertreservation.service;
 
+import com.edts.concertreservation.dto.CreateConcertResponse;
 import com.edts.concertreservation.entity.Concert;
 import com.edts.concertreservation.repository.ConcertRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,11 +34,6 @@ public class ConcertIntegrationTest {
 
     private String identifier;
     private Concert concert;
-
-    @BeforeEach
-    void setUp() {
-
-    }
 
     @AfterEach
     void tearDown() {
@@ -81,7 +76,7 @@ public class ConcertIntegrationTest {
     @Test
     void createConcert_shouldCreateConcertSuccessfully() {
         HttpEntity<String> request = generateHttpRequest(null, null, null);
-        ResponseEntity<String> response = restTemplate.postForEntity("/api/concerts", request, String.class);
+        ResponseEntity<CreateConcertResponse> response = restTemplate.postForEntity("/api/concerts", request, CreateConcertResponse.class);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         Assertions.assertNotNull(response.getBody());
@@ -90,7 +85,7 @@ public class ConcertIntegrationTest {
             .filter(con -> con.getName().contains(identifier))
             .findFirst()
             .orElseThrow();
-        assertTrue(response.getBody().contains(concert.getId().toString()));
+        assertEquals(concert.getId(), response.getBody().getId());
     }
 
     @Test

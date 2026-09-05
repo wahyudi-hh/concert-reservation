@@ -1,5 +1,6 @@
 package com.edts.concertreservation.service;
 
+import com.edts.concertreservation.dto.BookingResponse;
 import com.edts.concertreservation.entity.Concert;
 import com.edts.concertreservation.repository.BookingRepository;
 import com.edts.concertreservation.repository.ConcertRepository;
@@ -72,11 +73,11 @@ public class BookingIntegrationTest {
     void book_shouldSuccessfullyBookTickets() {
         concertRepository.save(concert);
         HttpEntity<String> request = generateHttpRequest(2);
-        ResponseEntity<String> response = restTemplate.postForEntity("/api/bookings", request, String.class);
+        ResponseEntity<BookingResponse> response = restTemplate.postForEntity("/api/bookings", request, BookingResponse.class);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         Assertions.assertNotNull(response.getBody());
-        assertTrue(response.getBody().contains(concert.getId().toString()));
+        assertEquals(concert.getId(), response.getBody().getConcertId());
 
         Concert updatedConcert = concertRepository.findById(concert.getId()).orElseThrow();
         assertEquals(8, updatedConcert.getAvailableTickets());

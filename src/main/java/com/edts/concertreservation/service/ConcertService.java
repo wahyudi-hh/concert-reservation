@@ -9,7 +9,7 @@ public interface ConcertService {
 
     Concert createConcert(
         String name,
-        String Description,
+        String description,
         Instant bookingStartAt,
         Instant bookingEndAt,
         Integer totalTickets,

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Setter
@@ -15,4 +16,5 @@ public class BookingResponse {
     private UUID id;
     private UUID concertId;
     private Integer quantity;
+    private Instant createdAt;
 }

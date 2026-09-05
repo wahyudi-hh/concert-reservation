@@ -41,6 +41,7 @@ public class BookingController {
             .id(booking.getId())
             .concertId(booking.getConcertId())
             .quantity(booking.getQuantity())
+            .createdAt(booking.getCreatedAt())
             .build();
     }
 }

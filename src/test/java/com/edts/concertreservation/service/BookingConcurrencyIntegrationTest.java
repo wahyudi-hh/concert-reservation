@@ -4,7 +4,6 @@ import com.edts.concertreservation.entity.Concert;
 import com.edts.concertreservation.repository.BookingRepository;
 import com.edts.concertreservation.repository.ConcertRepository;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,11 +34,6 @@ public class BookingConcurrencyIntegrationTest {
     private BookingRepository bookingRepository;
 
     private UUID concertId;
-
-    @BeforeEach
-    void setUp() {
-
-    }
 
     @AfterEach
     void tearDown() {
