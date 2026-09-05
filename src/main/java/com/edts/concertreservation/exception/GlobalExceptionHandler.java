@@ -12,6 +12,12 @@ public class GlobalExceptionHandler {
     public record ErrorResponse(String message) {
     }
 
+    @ExceptionHandler(InvalidConcertException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleInvalidConcert(InvalidConcertException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
     @ExceptionHandler(ConcertNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleConcertNotFound(ConcertNotFoundException ex) {
